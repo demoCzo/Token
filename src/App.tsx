@@ -1,120 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import { useMemo, useState } from 'react'
 import './App.css'
+import { PageArea } from './components/PageArea'
+import { Sidebar, type SidebarPage } from './components/Sidebar'
+
+const WORKSPACE = 'Token'
+
+const FAVORITES: SidebarPage[] = [
+  { id: 'f1', title: 'Getting started', icon: '📘' },
+  { id: 'f2', title: 'Weekly agenda', icon: '📅' },
+]
+
+const PRIVATE_PAGES: SidebarPage[] = [
+  { id: 'p1', title: 'Home', icon: '🏠' },
+  { id: 'p2', title: 'Project roadmap', icon: '🗺️' },
+  { id: 'p3', title: 'Design notes', icon: '✏️' },
+]
+
+const TEAM_PAGES: SidebarPage[] = [
+  { id: 't1', title: 'Team wiki', icon: '📚' },
+  { id: 't2', title: 'Sprint board', icon: '🏃' },
+]
+
+const ALL: SidebarPage[] = [...FAVORITES, ...PRIVATE_PAGES, ...TEAM_PAGES]
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedId, setSelectedId] = useState('p1')
+  const [mobileSidebar, setMobileSidebar] = useState(false)
+
+  const current = useMemo(() => {
+    const page = ALL.find((p) => p.id === selectedId)
+    return page ?? ALL[0]
+  }, [selectedId])
+
+  const breadcrumb =
+    FAVORITES.some((p) => p.id === selectedId)
+      ? 'Favorites'
+      : TEAM_PAGES.some((p) => p.id === selectedId)
+        ? 'Teamspace'
+        : 'Private'
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <div className="token-app">
+      <Sidebar
+        workspaceName={WORKSPACE}
+        favorites={FAVORITES}
+        privatePages={PRIVATE_PAGES}
+        teamPages={TEAM_PAGES}
+        selectedId={selectedId}
+        onSelect={(id) => {
+          setSelectedId(id)
+          setMobileSidebar(false)
+        }}
+        mobileOpen={mobileSidebar}
+        onCloseMobile={() => setMobileSidebar(false)}
+      />
+      <PageArea
+        title={current.title}
+        icon={current.icon}
+        breadcrumb={breadcrumb}
+        onOpenSidebar={() => setMobileSidebar(true)}
+      />
+    </div>
   )
 }
 
