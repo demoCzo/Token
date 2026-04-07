@@ -11,7 +11,7 @@ const FAVORITES: SidebarPage[] = [
 ]
 
 const PRIVATE_PAGES: SidebarPage[] = [
-  { id: 'p1', title: 'Home', icon: '🏠' },
+  { id: 'p1', title: 'Home 🐎', icon: '🏠' },
   { id: 'p2', title: 'Project roadmap', icon: '🗺️' },
   { id: 'p3', title: 'Design notes', icon: '✏️' },
 ]
