@@ -70,6 +70,9 @@ export function PageArea({ title, icon, breadcrumb, onOpenSidebar }: Props) {
                 up data.
               </div>
             </div>
+            <button type="button" className="token-button">
+              Click me
+            </button>
           </div>
         </article>
       </div>
